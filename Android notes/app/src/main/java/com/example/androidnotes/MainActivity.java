@@ -11,7 +11,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.androidnotes.Broatcast.InternetBroatcastReceived;
+import com.example.androidnotes.R;
+
 public class MainActivity extends AppCompatActivity {
+
+    private MyBroatcast myBroatcast; // wifi广播
 
     InternetBroatcastReceived internetBroatcastReceived;
     @Override
@@ -29,13 +34,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        // 注册广播
-        internetBroatcastReceived  = new InternetBroatcastReceived(this);
-        IntentFilter intentFilter=new IntentFilter();
-        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);// 监听wifi状态 打开，关闭状态
-//        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);// wifi扫描结果 扫描完成后会发送广播
-        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION); // wifi信息 连接状态
-        registerReceiver(internetBroatcastReceived,intentFilter);
+        initData();
     }
 
     @Override
@@ -66,5 +65,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void initData(){
+        myBroatcast = new MyBroatcast();
+    }
+
+    class MyBroatcast{
+        public void init(){
+            // 注册广播
+            internetBroatcastReceived  = new InternetBroatcastReceived(MainActivity.this);
+            IntentFilter intentFilter=new IntentFilter();
+            intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);// 监听wifi状态 打开，关闭状态
+//        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);// wifi扫描结果 扫描完成后会发送广播
+            intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION); // wifi信息 连接状态
+            registerReceiver(internetBroatcastReceived,intentFilter);
+        }
+    }
 
 }

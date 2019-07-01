@@ -1,4 +1,4 @@
-package com.example.androidnotes;
+package com.example.androidnotes.Broatcast;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
