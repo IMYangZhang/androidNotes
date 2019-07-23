@@ -1,22 +1,32 @@
 package com.example.androidnotes;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.example.androidnotes.Broatcast.InternetBroatcastReceived;
 import com.example.androidnotes.R;
+import com.example.androidnotes.recyclerView.ActivityRecyclerView;
+import com.example.androidnotes.recyclerView.model.DataInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private MyBroatcast myBroatcast; // wifi广播
+    private Button btn_recyclerView;
+
 
     InternetBroatcastReceived internetBroatcastReceived;
     @Override
@@ -35,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         initData();
+        initListen();
     }
 
     @Override
@@ -67,6 +78,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData(){
         myBroatcast = new MyBroatcast();
+
+    }
+
+    private void initListen(){
+        btn_recyclerView = findViewById(R.id.btn_recyclerView);
+        btn_recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,ActivityRecyclerView.class);
+                startActivity(intent);
+            }
+        });
     }
 
     class MyBroatcast{
