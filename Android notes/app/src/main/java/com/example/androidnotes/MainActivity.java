@@ -9,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,27 +25,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String TAG = "MainActivity";
     private MyBroatcast myBroatcast; // wifi广播
     private Button btn_recyclerView;
 
 
     InternetBroatcastReceived internetBroatcastReceived;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         initData();
         initListen();
     }
@@ -54,53 +47,49 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(internetBroatcastReceived);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void initData(){
+    private void initData() {
         myBroatcast = new MyBroatcast();
 
     }
 
-    private void initListen(){
-        btn_recyclerView = findViewById(R.id.btn_recyclerView);
-        btn_recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ActivityRecyclerView.class);
-                startActivity(intent);
-            }
-        });
+    private void initListen() {
+//        btn_recyclerView = findViewById(R.id.btn_recyclerView);
+//        btn_recyclerView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, ActivityRecyclerView.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 
-    class MyBroatcast{
-        public void init(){
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.i(TAG, "dispatchTouchEvent: "+ev.getAction());
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_MOVE:
+//                Log.i(TAG, "onTouchEvent: ");
+//        }
+        Log.i(TAG, "onTouchEvent: "+ event.getAction());
+        return super.onTouchEvent(event);
+    }
+
+
+    class MyBroatcast {
+        public void init() {
             // 注册广播
-            internetBroatcastReceived  = new InternetBroatcastReceived(MainActivity.this);
-            IntentFilter intentFilter=new IntentFilter();
+            internetBroatcastReceived = new InternetBroatcastReceived(MainActivity.this);
+            IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);// 监听wifi状态 打开，关闭状态
 //        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);// wifi扫描结果 扫描完成后会发送广播
             intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION); // wifi信息 连接状态
-            registerReceiver(internetBroatcastReceived,intentFilter);
+            registerReceiver(internetBroatcastReceived, intentFilter);
         }
     }
 
